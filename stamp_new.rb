@@ -5,28 +5,29 @@ class Scan
   end
 
   def scaning_start(map)
-    island = nil
+    @start = nil
+    @map = map
     @max.times do |i|
       
-      if map[i].size<@min && map[i].size != 0 then
-        @min = map[i].size
-        island = i
+      if @map[i].size<@min && @map[i].size != 0 then
+        @min = @map[i].size
+        @start = i
       end
 
     end
 
-    return island
+    return @start
 
   end
 
-  def scaning_root(neighbor, map)
+  def scaning_root(neighbor)
     next_island_num = nil
     count_max = 0
     far_island = nil
     
     neighbor.each_with_index do |next_island, i|
       count = 1
-      far_island = map[next_island][i]
+      far_island = @map[next_island][i]
 
       @max.times do |j|
 
@@ -35,7 +36,7 @@ class Scan
         end
 
         count += 1
-        far_island = map[far_island][j]
+        far_island = @map[far_island][j]
 
         if count > count_max && far_island != nil then
           count_max = count
@@ -54,13 +55,13 @@ class Scan
 
   end
 
-  def stamp_rarry(start, map)
+  def stamp_rarry
   	root = []
   	loop{
-      root << start
-      island_delete(start, map)
-      neighbor = map[start]
-      next_island = scaning_root(neighbor, map)
+      root << @start
+      island_delete(@start)
+      neighbor = @map[@start]
+      next_island = scaning_root(neighbor)
 
       if next_island == nil then
         puts "nothing neighbor island"
@@ -69,15 +70,15 @@ class Scan
       end
 
       neighbor = next_island
-      start = neighbor
+      @start = neighbor
     }
     return root
   end
 
-  def island_delete(start, map)
+  def island_delete(start)
 
     @max.times do |i|
-      map[i].delete(start)
+      @map[i].delete(start)
     end
 
   end
@@ -92,15 +93,16 @@ class FileAccess
   end
 
   def map_open
-    return @f_map = open(@map_data,"r")
+    return open(@map_data,"r")
   end
 
   def map_load
-    max = @f_map.gets.chomp.to_i
-    @map_all = @f_map.readlines
+  	f = map_open
+    max = f.gets.chomp.to_i
+    map_all = f.readlines
 
     max.times do |i|
-      @map[i] = @map_all[i].split(/\s/)
+      @map[i] = map_all[i].split(/\s/)
       @map[i].map!{|array| array.to_i(10)}
     end
 
@@ -108,31 +110,31 @@ class FileAccess
   end
 
   def map_close
-    return @f_map.close
+    return map_open.close
   end
 
   def stampsheet_open
-    return @f_stampsheet = open(@stampsheet,"w")
+    return open(@stampsheet,"w")
   end
 
   def stampsheet_write(root)
-    return @f_stampsheet.puts(root)
+    return stampsheet_open.puts(root)
   end
 
   def stampsheet_close
-    return @f_stampsheet.close
+    return stampsheet_open.close
   end
 
 end
 
-file_access = FileAccess.new("map.txt", "stampsheet.txt")
 map = []
+file_access = FileAccess.new("map.txt", "stampsheet.txt")
 file_access.map_open
 max,map = file_access.map_load
 file_access.map_close
 scan = Scan.new(max)
-start = scan.scaning_start(map)
-root = scan.stamp_rarry(start, map)
+scan.scaning_start(map)
+root = scan.stamp_rarry
 file_access.stampsheet_open
 file_access.stampsheet_write(root)
 file_access.stampsheet_close
