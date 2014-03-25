@@ -1,12 +1,12 @@
 class Scan
-  def initialize(max)
+  def initialize(max,map)
     @min = max
     @max = max
+    @map = map
   end
 
-  def scaning_start(map)
+  def scaning_start
     @start = nil
-    @map = map
     @max.times do |i|
       
       if @map[i].size<@min && @map[i].size != 0 then
@@ -132,8 +132,8 @@ file_access = FileAccess.new("map.txt", "stampsheet.txt")
 file_access.map_open
 max,map = file_access.map_load
 file_access.map_close
-scan = Scan.new(max)
-scan.scaning_start(map)
+scan = Scan.new(max, map)
+scan.scaning_start
 root = scan.stamp_rarry
 file_access.stampsheet_open
 file_access.stampsheet_write(root)
