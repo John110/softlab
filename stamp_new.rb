@@ -20,7 +20,7 @@ class Scan
 
   end
 
-  def scaning_root(neighbor)
+  def scaning_route(neighbor)
     next_island_num = nil
     count_max = 0
     far_island = nil
@@ -56,23 +56,23 @@ class Scan
   end
 
   def stamp_rarry
-  	root = []
-  	loop{
-      root << @start
+    route = []
+    loop{
+      route << @start
       island_delete(@start)
       neighbor = @map[@start]
-      next_island = scaning_root(neighbor)
+      next_island = scaning_route(neighbor)
 
       if next_island == nil then
         puts "nothing neighbor island"
-        root << neighbor[0]
+        route << neighbor[0]
         break
       end
 
       neighbor = next_island
       @start = neighbor
     }
-    return root
+    return route
   end
 
   def island_delete(start)
@@ -117,8 +117,8 @@ class FileAccess
     return open(@stampsheet,"w")
   end
 
-  def stampsheet_write(root)
-    return stampsheet_open.puts(root)
+  def stampsheet_write(route)
+    return stampsheet_open.puts(route)
   end
 
   def stampsheet_close
@@ -129,12 +129,11 @@ end
 
 map = []
 file_access = FileAccess.new("map.txt", "stampsheet.txt")
-file_access.map_open
 max,map = file_access.map_load
 file_access.map_close
 scan = Scan.new(max, map)
 scan.scaning_start
-root = scan.stamp_rarry
+route = scan.stamp_rarry
 file_access.stampsheet_open
-file_access.stampsheet_write(root)
+file_access.stampsheet_write(route)
 file_access.stampsheet_close
