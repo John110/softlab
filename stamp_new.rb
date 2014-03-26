@@ -5,7 +5,7 @@ class Scan
     @map = map
   end
 
-  def scaning_start
+  def scanning_start
     @start = nil
     @max.times do |i|
       
@@ -20,37 +20,43 @@ class Scan
 
   end
 
-  def scaning_route(neighbor)
-    next_island_num = nil
-    count_max = 0
-    far_island = nil
-    
-    neighbor.each_with_index do |next_island, i|
+  def scanning_route(neighbor)
+    @next_island_num = nil
+    @count_max = 0
+    @far_island = nil
+    @neighbor = neighbor
+
+    check_next_island
+
+    if @next_island_num == nil then
+      return nil
+    else
+      return @neighbor[@next_island_num]
+    end
+
+  end
+
+  def check_next_island
+    @neighbor.each_with_index do |next_island, i|
       count = 1
-      far_island = @map[next_island][i]
+      @far_island = @map[next_island][i]
 
       @max.times do |j|
 
-        if far_island == nil
+        if @far_island == nil
           break
         end
 
         count += 1
-        far_island = @map[far_island][j]
+        @far_island = @map[@far_island][j]
 
-        if count > count_max && far_island != nil then
-          count_max = count
-          next_island_num = i
+        if count > @count_max && @far_island != nil then
+          @count_max = count
+          @next_island_num = i
         end
 
       end
-
-    end
-
-    if next_island_num == nil then
-      return nil
-    else
-      return neighbor[next_island_num]
+  
     end
 
   end
@@ -61,7 +67,7 @@ class Scan
       route << @start
       island_delete(@start)
       neighbor = @map[@start]
-      next_island = scaning_route(neighbor)
+      next_island = scanning_route(neighbor)
 
       if next_island == nil then
         puts "nothing neighbor island"
@@ -132,7 +138,7 @@ file_access = FileAccess.new("map.txt", "stampsheet.txt")
 max,map = file_access.map_load
 file_access.map_close
 scan = Scan.new(max, map)
-scan.scaning_start
+scan.scanning_start
 route = scan.stamp_rally
 file_access.stampsheet_write(route)
 file_access.stampsheet_close
