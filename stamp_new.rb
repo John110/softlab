@@ -1,16 +1,16 @@
 class Scan
   def initialize(max,map)
-    @min = max
     @max = max
     @map = map
   end
 
   def scanning_start
     @start = nil
+    min = @max
     @max.times do |i|
       
-      if @map[i].size<@min && @map[i].size != 0 then
-        @min = @map[i].size
+      if @map[i].size<min && @map[i].size != 0 then
+        min = @map[i].size
         @start = i
       end
 
