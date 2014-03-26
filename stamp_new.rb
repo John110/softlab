@@ -134,6 +134,5 @@ file_access.map_close
 scan = Scan.new(max, map)
 scan.scaning_start
 route = scan.stamp_rarry
-file_access.stampsheet_open
 file_access.stampsheet_write(route)
 file_access.stampsheet_close
