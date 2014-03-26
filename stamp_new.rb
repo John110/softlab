@@ -55,7 +55,7 @@ class Scan
 
   end
 
-  def stamp_rarry
+  def stamp_rally
     route = []
     loop{
       route << @start
@@ -133,6 +133,6 @@ max,map = file_access.map_load
 file_access.map_close
 scan = Scan.new(max, map)
 scan.scaning_start
-route = scan.stamp_rarry
+route = scan.stamp_rally
 file_access.stampsheet_write(route)
 file_access.stampsheet_close
