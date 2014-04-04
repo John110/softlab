@@ -23,12 +23,12 @@ class Searcher
     return route
   end
 
-private
+  private
   def search_first_island
     @start = nil
     min = @max
     @max.times do |i|
-      if @map[i].size<min && @map[i].size != 0 then
+      if @map[i].size < min && @map[i].size != 0
         min = @map[i].size
         @start = i
       end
@@ -58,7 +58,7 @@ private
         end
         count += 1
         @far_island = @map[@far_island][j]
-        if count > @count_max && @far_island != nil then
+        if count > @count_max && @far_island != nil
           @count_max = count
           @next_island_num = i
         end
@@ -87,7 +87,7 @@ class FileManager
     f.close
   end
 
-private
+  private
   def number_of_islands
     return @input_file.gets.chomp.to_i
   end
@@ -102,7 +102,7 @@ private
 end
 
 file_manager = FileManager.new
-max,map = file_manager.read("map.txt")
+max, map = file_manager.read("map.txt")
 searcher = Searcher.new(max, map)
 route = searcher.stamp_rally
 file_manager.write_with_route(route)
