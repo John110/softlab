@@ -1,6 +1,36 @@
 package img;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import javax.imageio.ImageIO;
 
 public class ImageManager{
+	static BufferedImage reader;
+	static BufferedImage writer;
+	static int width;
+	static int height;
+	
+	public static void set_image(String file_name) throws IOException{
+		reader = ImageIO.read(new File(file_name));
+		width = reader.getWidth();
+		height = reader.getHeight();
+		writer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+	}
+	
+	public static void negapoji() throws IOException{
+		for(int y=0;y<height;y++){
+			for(int x=0;x<width;x++){
+				int c = reader.getRGB(x, y);
+				int r = 255-r(c);
+				int g = 255-g(c);
+				int b = 255-b(c);
+				int rgb = rgb(r,g,b);
+				writer.setRGB(x,y,rgb);
+			}
+		}
+		File output_image = new File("negapoji.jpg");
+		ImageIO.write(writer, "jpg", output_image);
+	}
+	
     public static int a(int c){
         return c>>>24;
     }
